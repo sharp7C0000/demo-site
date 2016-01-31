@@ -6,7 +6,9 @@ use nickel::{Nickel, HttpRouter, StaticFilesHandler};
 fn main() {
     let mut server = Nickel::new();
 
-    server.get("/app", middleware! { |_, response|
+    server.utilize(StaticFilesHandler::new("public/"));
+
+    server.get("/", middleware! { |_, response|
         let mut data = HashMap::new();
         data.insert("name", "user");
         return response.render("views/template.tpl", &data);
