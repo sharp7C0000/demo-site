@@ -1,6 +1,6 @@
 <html>
     <head>
-      <script src="public/app.js"></script>
+      <link rel="stylesheet" type="text/css" href="css/test.css">
     </head>
 
     <body>
@@ -15,6 +15,12 @@
           <button type="button" class="btn btn-warning-outline">Warning</button>
           <button type="button" class="btn btn-danger-outline">Danger</button>
         </h2>
+
+        <footer>
+          <script src="js/app.js"></script>
+        </footer>
+
+
 
 
     </body>
