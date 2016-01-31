@@ -1,6 +1,7 @@
 'use strict';
 
 var browserify = require('browserify');
+var watchify = require('watchify');
 var browserifyCss = require('browserify-css');
 var gulp = require('gulp');
 var source = require('vinyl-source-stream');
@@ -53,6 +54,10 @@ gulp.task('javascript', function () {
         .on('error', gutil.log)
     //.pipe(sourcemaps.write('./'))
     .pipe(gulp.dest('../app/public/js/'));
+});
+
+gulp.task('watch', function(){
+
 });
 
 gulp.task('default', ['javascript', 'concat']);
