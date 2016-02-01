@@ -11,7 +11,7 @@ fn main() {
     server.get("/", middleware! { |_, response|
         let mut data = HashMap::new();
         data.insert("name", "user");
-        return response.render("views/template.tpl", &data);
+        return response.render("views/index.tpl", &data);
     });
 
     server.listen("127.0.0.1:6767");

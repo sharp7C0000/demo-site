@@ -1,6 +1,6 @@
 <html>
     <head>
-      <link rel="stylesheet" type="text/css" href="css/test.css">
+      <link rel="stylesheet" type="text/css" href="css/app.css">
     </head>
 
     <body>
@@ -19,9 +19,5 @@
         <footer>
           <script src="js/app.js"></script>
         </footer>
-
-
-
-
     </body>
 </html>
