@@ -56,21 +56,9 @@ var browserifyTask = function(watch) {
 }
 
 gulp.task('sass', function() {
-  var sassStream,
-      cssStream;
-
-  //compile sass
-  var sassStream = gulp.src('./sass/**/*.scss')
+  return gulp.src('./sass/**/*.scss')
     .pipe(sass().on('error', sass.logError))
-    .pipe(gulp.dest('./temp/app.css'));
-
-  //select additional css files
-  var cssStream = gulp.src('./node_modules/bootstrap/dist/css/bootstrap.css');
-
-  //merge the two streams and concatenate their contents into a single file
-  return merge(sassStream, cssStream)
-      .pipe(concat('app.css'))
-      .pipe(gulp.dest('../app/public/css'));
+    .pipe(gulp.dest('../app/public/css'));
 });
 
 gulp.task('sass-watch', function(){
@@ -80,12 +68,8 @@ gulp.task('sass-watch', function(){
 });
 
 gulp.task('clean', function () {
-  var tempClean = gulp.src('./temp')
+  return gulp.src('../app/public')
 		.pipe(clean({force: true}));
-  var publicClean = gulp.src('../app/public')
-		.pipe(clean({force: true}));
-
-	return merge(tempClean, publicClean);
 });
 
 // define the browserify-watch as dependencies for this task

@@ -1,3 +1,9 @@
+@import '../node_modules/bootstrap/scss/bootstrap-flex';
 
-body {
+html {
+  font-size: 14px;
+
+  nav {
+    border-radius: 0px;
+  }
 }
