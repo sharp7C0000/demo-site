@@ -7,44 +7,32 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <link rel="stylesheet" type="text/css" href="css/app.css">
   </head>
+
   <body>
-    <nav class="navbar navbar-dark bg-primary">
-  <button class="navbar-toggler hidden-sm-up" type="button" data-toggle="collapse" data-target="#exCollapsingNavbar2">
-    &#9776;
-  </button>
-  <div class="collapse navbar-toggleable-xs" id="exCollapsingNavbar2">
-    <a class="navbar-brand" href="#">Demo Site</a>
-    <ul class="nav navbar-nav">
-      <li class="nav-item active">
-        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Features</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Pricing</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">About</a>
-      </li>
-    </ul>
-  </div>
-</nav>
+    <nav class="navbar navbar-fixed-top navbar-dark bg-primary">
 
-<div class="container">
-  <div class="card">
-    <img class="card-img-top" data-src="..." alt="Card image cap">
-    <div class="card-block">
-      <h4 class="card-title">Card title</h4>
-      <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-      <a href="#" class="btn btn-primary">Button</a>
+      <div class="navbar-toggleable-xs" id="exCollapsingNavbar2">
+        <a class="navbar-brand" href="#">Shitty Code Storage</a>
+      </div>
+      <div class="pull-xs-right">
+        <button class="btn btn-success-outline" type="submit"><i class="fa fa-external-link"></i> Go to dev blog</button>
+      </div>
+    </nav>
+
+    <div class="container">
+      <div class="row">
+        <div class="card">
+          <img class="card-img-top" data-src="..." alt="Card image cap">
+          <div class="card-block">
+            <h4 class="card-title">Card title</h4>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            <a href="#" class="btn btn-primary">Go to dev blog</a>
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
-
-
-
-    <!-- jQuery first, then Bootstrap JS. -->
-    <script src="js/app.js"></script>
+    <footer>
+      <script src="js/app.js"></script>
+    </footer>
   </body>
 </html>
