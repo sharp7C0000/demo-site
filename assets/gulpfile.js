@@ -61,6 +61,11 @@ gulp.task('sass', function() {
     .pipe(gulp.dest('../app/public/css'));
 });
 
+gulp.task('resource', function () {
+  return gulp.src('./node_modules/font-awesome/fonts/**.*', {base: './node_modules/font-awesome/fonts/'})
+  .pipe(gulp.dest('../app/public/fonts'));
+});
+
 gulp.task('sass-watch', function(){
   // watch other files, for example .less file
   gulp.watch('./sass/**/*.scss',
@@ -74,4 +79,4 @@ gulp.task('clean', function () {
 
 // define the browserify-watch as dependencies for this task
 gulp.task('watch', ['browserify-watch', 'sass-watch']);
-gulp.task('compile', ['browserify', 'sass']);
+gulp.task('compile', ['browserify', 'sass', 'resource']);
