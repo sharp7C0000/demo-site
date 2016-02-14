@@ -2,16 +2,33 @@ use std::collections::HashMap;
 use nickel::{Nickel, HttpRouter, StaticFilesHandler};
 
 pub mod router;
+pub mod config;
 
-pub struct DemoServer {
-	pub server: Nickel,
+// start entry function
+pub fn start() {
+
+	let mut server = Server::new(
+
+	);
+
+
+    server.init();
+    server.register();
+    //server.start();
+    server.server.listen("127.0.0.1:6767");
 }
 
-impl DemoServer {
-    pub fn new() -> DemoServer {
+pub struct Server {
+	server       : Nickel,
+	serverSetting: config::ServerSetting
+}
 
-        DemoServer {
-            server: Nickel::new()
+impl Server {
+    pub fn new() -> Server {
+
+        Server {
+            server: Nickel::new(),
+			serverSetting: config::ServerSetting::new("Config.toml")
         }
     }
 

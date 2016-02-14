@@ -1,8 +1,8 @@
 use std::collections::HashMap;
 use nickel::{Nickel, HttpRouter, StaticFilesHandler};
-use server::DemoServer;
+use server::Server;
 
-impl DemoServer {
+impl Server {
     pub fn register(&mut self) {
 		let se2 = &mut self.server;
 

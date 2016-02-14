@@ -4,3 +4,6 @@ version = "0.1.0"
 
 [dependencies.nickel]
 version = "*"
+
+[dependencies]
+toml = "0.1"
