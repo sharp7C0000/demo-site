@@ -30,10 +30,12 @@ impl ServerSetting {
 	        Ok(result) => result,
 	    };
 
-		let value: toml::Value = toml::Parser::new(&s).parse().unwrap();
+		let value = toml::Parser::new(&s).parse().unwrap();
 		println!("{:?}", value);
 
-		let k = value.lookup("config.ip").unwrap();
+		let config = value.get("config").unwrap();
+
+		let k = config.lookup("ip").unwrap().as_str();
 
 		println!("{:?}", k);
 
