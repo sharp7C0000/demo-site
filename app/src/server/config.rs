@@ -1,17 +1,17 @@
 use std::io::prelude::*;
 use std::fs::File;
-//use toml::{Parser, Value};
 use toml;
 
 use std::error::Error;
 use std::path::Path;
 
 pub struct ServerSetting {
-	ip  : &'static str,
+	ip  : String,
 	port: &'static str
 }
 
 impl ServerSetting {
+
 	pub fn new(configFilePath: &'static str) -> ServerSetting {
 
 		// open config file
@@ -35,13 +35,23 @@ impl ServerSetting {
 
 		let config = value.get("config").unwrap();
 
-		let k = config.lookup("ip").unwrap().as_str();
+		let k = match config.lookup("ip").unwrap().as_str() {
+			Some(s) => s,
+			None => panic!("couldn't find ip address"),
+		};
+		//
+		// println!("{:?}", k);
 
-		println!("{:?}", k);
+		let mut t = String::new();
+
+		t.push_str(k);
+
 
 		ServerSetting {
-            ip: "1234",
+			ip: t,
 			port: "1234"
-        }
+		}
+
+
 	}
 }
