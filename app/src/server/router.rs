@@ -4,7 +4,7 @@ use server::Server;
 
 impl Server {
     pub fn register(&mut self) {
-		let se2 = &mut self.server;
+		let se2 = &mut self.nickelServer;
 
         se2.get("/", middleware! { |_, response|
             let mut data = HashMap::new();

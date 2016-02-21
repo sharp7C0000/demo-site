@@ -1,13 +1,18 @@
 use std::io::prelude::*;
 use std::fs::File;
-use toml;
 
 use std::error::Error;
 use std::path::Path;
 
+use toml;
+
 pub struct ServerSetting {
+	// ip address
 	ip  : String,
-	port: &'static str
+	// port number
+	port: String,
+	// public root
+	public_root: String
 }
 
 impl ServerSetting {
@@ -30,28 +35,31 @@ impl ServerSetting {
 	        Ok(result) => result,
 	    };
 
-		let value = toml::Parser::new(&s).parse().unwrap();
-		println!("{:?}", value);
+		// parse toml
+		let parsed = toml::Parser::new(&s).parse().unwrap();
+		let config = parsed.get("config").unwrap();
 
-		let config = value.get("config").unwrap();
+		// assign config values
+		fn getConfigValue(config: &toml::Value, lookup: &'static str) -> String {
+			let result = match config.lookup(lookup) {
+				Some(r) => r.as_str().unwrap(),
+				None    => panic!("couldn't find config value {}", lookup),
+			};
 
-		let k = match config.lookup("ip").unwrap().as_str() {
-			Some(s) => s,
-			None => panic!("couldn't find ip address"),
+			String::from(result)
 		};
-		//
-		// println!("{:?}", k);
-
-		let mut t = String::new();
-
-		t.push_str(k);
-
 
 		ServerSetting {
-			ip: t,
-			port: "1234"
+			ip         : getConfigValue(config, "ip"),
+			port       : getConfigValue(config, "port"),
+			public_root: getConfigValue(config, "public_root")
 		}
-
-
 	}
+
+	pub fn get_ip(&self) -> &String { &self.ip }
+
+	pub fn get_port(&self) -> &String { &self.port }
+
+	pub fn get_public_root(&self) -> &String{ &self.public_root }
+
 }
