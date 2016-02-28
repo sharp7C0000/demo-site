@@ -2,8 +2,12 @@
 #[macro_use] extern crate toml;
 
 mod server;
+mod controllers;
 
 fn main() {
     // runing server
-    server::start();
+    let mut ctrls = Vec::new();
+    ctrls.push(controllers::get());
+
+    server::start(&ctrls);
 }

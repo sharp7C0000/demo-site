@@ -17,10 +17,10 @@ pub struct ServerSetting {
 
 impl ServerSetting {
 
-	pub fn new(configFilePath: &'static str) -> ServerSetting {
+	pub fn new(config_file_path: &'static str) -> ServerSetting {
 
 		// open config file
-		let path    = Path::new(configFilePath);
+		let path    = Path::new(config_file_path);
     	let display = path.display();
 
 	    let mut file = match File::open(&path) {
@@ -40,7 +40,7 @@ impl ServerSetting {
 		let config = parsed.get("config").unwrap();
 
 		// assign config values
-		fn getConfigValue(config: &toml::Value, lookup: &'static str) -> String {
+		fn get_config_value(config: &toml::Value, lookup: &'static str) -> String {
 			let result = match config.lookup(lookup) {
 				Some(r) => r.as_str().unwrap(),
 				None    => panic!("couldn't find config value {}", lookup),
@@ -50,9 +50,9 @@ impl ServerSetting {
 		};
 
 		ServerSetting {
-			ip         : getConfigValue(config, "ip"),
-			port       : getConfigValue(config, "port"),
-			public_root: getConfigValue(config, "public_root")
+			ip         : get_config_value(config, "ip"),
+			port       : get_config_value(config, "port"),
+			public_root: get_config_value(config, "public_root")
 		}
 	}
 

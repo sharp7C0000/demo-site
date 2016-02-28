@@ -1,39 +1,44 @@
-use std::collections::HashMap;
-use nickel::{Nickel, HttpRouter, StaticFilesHandler};
+use nickel::{Nickel, StaticFilesHandler};
 
-pub mod router;
 pub mod config;
+pub mod controller;
 
 // constants
 const CONFIG_FILE_PATH: &'static str = "Config.toml";
 
 // start entry function
-pub fn start() {
+pub fn start(controllers: &Vec<controller::Controller>) {
 
 	let mut server = Server::new();
 
     server.init();
-    server.register();
 
-	let listen_addr = "".to_string() + server.serverSetting.get_ip() + ":" + server.serverSetting.get_port();
-    server.nickelServer.listen(&*listen_addr);
+	// register controllers
+	for ctrl in controllers {
+		let ctrl_regi_fn      = ctrl.get_register_fn();
+		let mut nickel_server = &mut server.nickel_server;
+		ctrl_regi_fn(nickel_server);
+	}
+
+	let listen_addr = "".to_string() + server.server_setting.get_ip() + ":" + server.server_setting.get_port();
+    server.nickel_server.listen(&*listen_addr);
 }
 
 pub struct Server {
-	nickelServer : Nickel,
-	serverSetting: config::ServerSetting
+	nickel_server : Nickel,
+	server_setting: config::ServerSetting
 }
 
 impl Server {
     pub fn new() -> Server {
         Server {
-            nickelServer : Nickel::new(),
-			serverSetting: config::ServerSetting::new(CONFIG_FILE_PATH)
+            nickel_server : Nickel::new(),
+			server_setting: config::ServerSetting::new(CONFIG_FILE_PATH)
         }
     }
 
     pub fn init(&mut self) {
-        let sv = &mut self.nickelServer;
-        sv.utilize(StaticFilesHandler::new(self.serverSetting.get_public_root()));
+        let sv = &mut self.nickel_server;
+        sv.utilize(StaticFilesHandler::new(self.server_setting.get_public_root()));
     }
 }
