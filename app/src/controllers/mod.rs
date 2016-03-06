@@ -14,4 +14,12 @@ fn register(nickel_server: &mut Nickel) {
 		data.insert("", "");
 		return response.render("views/index.tpl", &data);
 	});
+
+	// GET : login
+	nickel_server.get("/login", middleware! { |_, response|
+		let mut data = HashMap::new();
+		data.insert("", "");
+		return response.render("views/login.tpl", &data);
+	});
+
 }
