@@ -2,6 +2,8 @@
 <html>
   <head>
     {{>partial/header}}
+    <link rel="stylesheet" type="text/css" href="css/login.css">
+
     <title>Shitty Code Storage : login</title>
   </head>
 
@@ -12,7 +14,7 @@
     <!-- body container -->
     <div id="container" class="container">
       <div class="row">
-        <div class="col-sm-offset-3 col-md-6 col-sm-offset-3">
+        <div class="login-container">
           <div class="card">
             <div class="card-block">
               <h3 class="card-title">LOGIN</h3>

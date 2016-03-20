@@ -1,12 +1,31 @@
 @import '../node_modules/bootstrap/scss/bootstrap-flex';
 @import '../node_modules/font-awesome/scss/font-awesome';
+@import '../node_modules/bootstrap/scss/mixins/_breakpoints';
 
 html {
   #container {
       //height: 1000px;
-      border:1px solid red;
+      //border:1px solid red;
       margin-top: 55px;
       padding-top:20px;
       margin-bottom:55px;
+  }
+}
+
+/** responsive **/
+
+@include media-breakpoint-up(xs) {
+  #top-bar {
+    .button-title {
+      display: none;
+    }
+  }
+}
+
+@include media-breakpoint-up(sm) {
+  #top-bar {
+    .button-title {
+      display: inline!important;
+    }
   }
 }
