@@ -5,9 +5,9 @@ require("bootstrap");
 console.log("ready7");
 
 const gods = [
-  {name: 'Douglas Crockford'},
-  {name: 'Guido van Rossum'},
-  {name: 'Raffaele Esposito'}
+  {name: 'Dddouglas ggCrockfordgf'},
+  {name: 'Guibbdo vaggn Rhhhossum'},
+  {name: 'Rafsssssfaele Espoggggsitggo'}
 ];
 
 let miracles = new Map();

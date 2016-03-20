@@ -14,45 +14,51 @@ var gutil = require('gulp-util');
 var sass = require('gulp-sass');
 var merge = require('merge-stream');
 var concat = require('gulp-concat');
+var glob   = require('glob');
+var es     = require('event-stream');
+var rename = require('gulp-rename');
 
-gulp.task('browserify', function(){
-  browserifyTask(false);
+gulp.task('browserify', function(done){
+  browserifyTask(false, done);
 });
 
-gulp.task('browserify-watch', function(){
-  browserifyTask(true);
+gulp.task('browserify-watch', function(done){
+  browserifyTask(true, done);
 });
 
-var browserifyTask = function(watch) {
+var browserifyTask = function(watch, done) {
 
-  function bundle(b) {
-    b.bundle()
-      .pipe(source('app.js'))
-      .pipe(buffer())
-      .pipe(sourcemaps.init({loadMaps: true}))
-          // Add transformation tasks to the pipeline here.
-          //.pipe(uglify())
-          //.pipe(browserifyCss())
-          .on('error', gutil.log)
-      .pipe(sourcemaps.write('./'))
-      .pipe(gulp.dest('../app/public/js/'));
-  }
+  function bundle(b, entry) {
 
-  // set up the browserify instance on a task basis
-  var b = browserify({
-    entries: './scripts/app.js',
-    debug: true
-  })
-  .transform(babelify, {presets: ["es2015"]})
+    var fileNameRegex = /[\w-]+\./;
+    var fileName      = fileNameRegex.exec(entry)[0].replace(".", ".js").replace("main-", "");
 
-  if(watch) {
-    b = watchify(b);
-    b.on('update', function(){
-      bundle(b);
+    return b
+    .bundle()
+    .pipe(source(fileName))
+    .pipe(gulp.dest('../app/public/js/'));
+  };
+
+  glob('./scripts/main-**.js', function(err, files) {
+    if(err) done(err);
+
+    var tasks = files.map(function(entry) {
+
+      var b = browserify({ entries: [entry] })
+      .transform(babelify, {presets: ["es2015"]});
+
+      if(watch) {
+        var wb = watchify(b);
+        wb.on('update', function(){
+          return bundle(b, entry);
+        });
+      }
+
+      return bundle(b, entry);
     });
-  }
 
-  return bundle(b);
+    es.merge(tasks).on('end', done);
+  });
 }
 
 gulp.task('sass', function() {
@@ -73,10 +79,14 @@ gulp.task('sass-watch', function(){
 });
 
 gulp.task('clean', function () {
-  return gulp.src('../app/public')
+  return gulp.src('../app/public/*')
 		.pipe(clean({force: true}));
 });
 
 // define the browserify-watch as dependencies for this task
-gulp.task('watch', ['browserify-watch', 'sass-watch']);
-gulp.task('compile', ['browserify', 'sass', 'resource']);
+gulp.task('watch', ['compile', 'browserify-watch', 'sass-watch']);
+gulp.task('compile', ['clean'], function() {
+  gulp.start("browserify");
+  gulp.start("sass");
+  gulp.start("resource");
+});
