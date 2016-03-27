@@ -2,21 +2,29 @@ global.jQuery = require('jquery');
 global.Tether = require('tether');
 require("bootstrap");
 
-console.log("ready7");
+var Vue = require("vue");
 
-const gods = [
-  {name: 'Douglas Crockfdddord'},
-  {name: 'Guido van Rossum'},
-  {name: 'Raffaele Esposito'}
-];
+// TODO : VUE validator
 
-let miracles = new Map();
+// generate Vue
+new Vue({
+  el: "#login",
 
-miracles.set(gods[0], 'JavaScript2');
-miracles.set(gods[1], 'Python');
-miracles.set(gods[2], 'Pizza Margherita');
+  data: {
+    formData: {
+      email   : null,
+      password: null
+    }
+  },
 
-// Prints "JavaScript"
-console.log(miracles.get(gods[0]));
+  methods: {
+    submit () {
+      console.log(this.$data);
+    }
+  },
 
-console.log("tesffft");
+  ready () {
+    // ready
+  }
+
+});

@@ -18,16 +18,16 @@
           <div class="card">
             <div class="card-block">
               <h3 class="card-title">LOGIN</h3>
-              <form>
+              <form action="#" v-on:submit.prevent="submit">
                 <fieldset class="form-group">
                   <label>Email</label>
-                  <input type="text" class="form-control" placeholder="Email">
+                  <input type="text" class="form-control" placeholder="Email" v-model="formData.email">
                 </fieldset>
                 <fieldset class="form-group">
                   <label>Password</label>
-                  <input type="password" class="form-control" placeholder="Password">
+                  <input type="password" class="form-control" placeholder="Password" v-model="formData.password">
                 </fieldset>
-                <button type="button" class="btn btn-primary btn-block">Login</button>
+                <button type="submit" class="btn btn-primary btn-block">Login</button>
               </form>
             </div>
           </div>
