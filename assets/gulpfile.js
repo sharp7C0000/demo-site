@@ -18,6 +18,8 @@ var glob   = require('glob');
 var es     = require('event-stream');
 var rename = require('gulp-rename');
 
+var Server = require('karma').Server;
+
 gulp.task('browserify', function(done){
   browserifyTask(false, done);
 });
@@ -39,7 +41,7 @@ var browserifyTask = function(watch, done) {
     .pipe(gulp.dest('../app/public/js/'));
   };
 
-  glob('./scripts/main-**.js', function(err, files) {
+  glob('./scripts/src/main-**.js', function(err, files) {
     if(err) done(err);
 
     var tasks = files.map(function(entry) {
@@ -74,13 +76,19 @@ gulp.task('resource', function () {
 
 gulp.task('sass-watch', function(){
   // watch other files, for example .less file
-  gulp.watch('./sass/**/*.scss',
-             ['sass']);
+  gulp.watch('./sass/**/*.scss', ['sass']);
 });
 
 gulp.task('clean', function () {
   return gulp.src('../app/public/*')
 		.pipe(clean({force: true}));
+});
+
+gulp.task('test', function (done) {
+  new Server({
+    configFile: __dirname + '/karma.conf.js',
+    singleRun: true
+  }, done).start();
 });
 
 // define the browserify-watch as dependencies for this task
