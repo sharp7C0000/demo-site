@@ -15,6 +15,17 @@ var ourDataArray = {
     }]
 };
 
+console.log(jasmine.getFixtures);
+jasmine.getFixtures().fixturesPath = 'base/scripts/test/fixtures';
+
+describe("fixture", function() {
+  it("has body", function() {
+    console.log(loadFixtures('test.html'));
+
+    expect("1").toBe('Test content');
+  });
+});
+
 describe("Our data array", function() {
   it("has four items", function() {
     expect(ourDataArray.Questions.length).toBe(4);

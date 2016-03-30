@@ -3,10 +3,11 @@
 module.exports = function(karma) {
   karma.set({
 
-    frameworks: [ 'jasmine', 'browserify' ],
+    frameworks: [ 'jasmine-jquery', 'jasmine', 'browserify' ],
 
     files: [
-      'scripts/test/**/*.js'
+      'scripts/test/test.js',
+      {pattern: 'scripts/test/fixtures/*.html', watched: true, included: false, served: true}
     ],
 
     reporters: [ 'dots' ],
