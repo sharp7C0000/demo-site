@@ -1,5 +1,5 @@
 [package]
-name = "demo-site"
+name = "demo_site"
 version = "0.1.0"
 
 [dependencies.nickel]
