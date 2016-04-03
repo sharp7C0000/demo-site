@@ -1,20 +1,20 @@
 'use strict';
 
 module.exports = function(karma) {
+
   karma.set({
 
-    frameworks: [ 'jasmine-jquery', 'jasmine', 'browserify' ],
+    frameworks: ['jasmine-jquery', 'jasmine', 'browserify'],
 
     files: [
-      'scripts/test/test.js',
+      {pattern: 'scripts/test/spec-*.js'},
       {pattern: 'scripts/test/fixtures/*.html', watched: true, included: false, served: true}
     ],
 
-    reporters: [ 'dots' ],
+    reporters: ['dots'],
 
     preprocessors: {
-      //'scripts/src/*.js': [ 'browserify' ],
-      'scripts/test/*.js': [ 'browserify' ]
+      'scripts/test/spec-*.js': [ 'browserify' ]
     },
 
     browsers: [ 'Chrome' ],
