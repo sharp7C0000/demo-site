@@ -1,4 +1,4 @@
 [config]
-ip          = "localhost"
+ip          = "0.0.0.0"
 port        = "6767"
-public_root = "public" 
+public_root = "public"

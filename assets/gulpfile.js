@@ -17,6 +17,7 @@ var concat = require('gulp-concat');
 var glob   = require('glob');
 var es     = require('event-stream');
 var rename = require('gulp-rename');
+var es2015 = require('babel-preset-es2015');
 
 var Server = require('karma').Server;
 
@@ -47,7 +48,7 @@ var browserifyTask = function(watch, done) {
     var tasks = files.map(function(entry) {
 
       var b = browserify({ entries: [entry] })
-      .transform(babelify, {presets: ["es2015"]});
+      .transform(babelify, {presets: [es2015]});
 
       if(watch) {
         var wb = watchify(b);
