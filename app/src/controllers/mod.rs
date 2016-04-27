@@ -1,25 +1,21 @@
-use std::collections::HashMap;
-use nickel::{Nickel, HttpRouter};
+use iron::prelude::*;
+use iron::status;
 use server::controller::Controller;
+use server::router::Router;
 
 pub fn get() -> Controller{
 	Controller::new(register)
 }
 
-fn register(nickel_server: &mut Nickel) {
+fn register(router: &mut Router) {
 
 	// GET : index
-	nickel_server.get("/", middleware! { |_, response|
-		let mut data = HashMap::new();
-		data.insert("", "");
-		return response.render("views/index.tpl", &data);
-	});
+    router.add_route("/".to_string(), |_: &mut Request| {
+        Ok(Response::with((status::Ok, "Hello world !")))
+    });
 
 	// GET : login
-	nickel_server.get("/login", middleware! { |_, response|
-		let mut data = HashMap::new();
-		data.insert("", "");
-		return response.render("views/login.tpl", &data);
-	});
-
+    router.add_route("/login".to_string(), |_: &mut Request| {
+        Ok(Response::with((status::Ok, "Hello login!")))
+    });
 }

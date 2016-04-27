@@ -13,21 +13,21 @@ pub mod controller;
 pub mod router;
 
 // constants
+const PUBLUC_ROUTE: &'static str = "assets";
 const CONFIG_FILE_PATH: &'static str = "Config.toml";
 
 // start entry function
 pub fn start(controllers: &Vec<controller::Controller>) {
 
-	let mut server = Server::new();
+    let mut router = router::Router::new();
 
-    server.init();
+    // register routes
+    for ctrl in controllers {
+        let ctrl_regi_fn = ctrl.get_register_fn();
+        ctrl_regi_fn(&mut router);
+    }
 
-	// register controllers
-	for ctrl in controllers {
-		let ctrl_regi_fn      = ctrl.get_register_fn();
-		let mut nickel_server = &mut server.nickel_server;
-		ctrl_regi_fn(nickel_server);
-	}
+	let mut server = Server::new(router);
 
 	let listen_addr = "".to_string() + server.server_setting.get_ip() + ":" + server.server_setting.get_port();
     server.iron_server.http(&*listen_addr).unwrap();
@@ -40,39 +40,20 @@ pub struct Server {
 }
 
 impl Server {
-    pub fn new() -> Server {
+    pub fn new(rt: router::Router) -> Server {
 
-        // test
-        let mut router = router::Router::new();
+        let server_setting = config::ServerSetting::new(CONFIG_FILE_PATH);
+        let mut mount      = Mount::new();
 
-        router.add_route("hello".to_string(), |_: &mut Request| {
-            Ok(Response::with((status::Ok, "Hello world !")))
-        });
+        let pub_url  = format!("{}{}", server_setting.get_public_root(), "/");
+        let pub_root = format!("{}{}", "/", PUBLUC_ROUTE.to_string());
 
-        router.add_route("hello/again".to_string(), |_: &mut Request| {
-           Ok(Response::with((status::Ok, "Hello again !")))
-        });
-
-        router.add_route("error".to_string(), |_: &mut Request| {
-           Ok(Response::with(status::BadRequest))
-        });
-
-        //router.add_route("".to_string(), Static::new(Path::new("public")));
-
-        let mut mount = Mount::new();
-        // Serve the shared JS/CSS at /
-        mount.mount("/assets", Static::new(Path::new("public/"))).mount("/", router);
+        mount.mount(&pub_url, Static::new(Path::new(&pub_root))).mount("/", rt);
 
         Server {
             nickel_server: Nickel::new(),
             iron_server: Iron::new(mount),
-			server_setting: config::ServerSetting::new(CONFIG_FILE_PATH)
+			server_setting: server_setting
         }
-    }
-
-    pub fn init(&mut self) {
-
-        let sv = &mut self.nickel_server;
-        sv.utilize(StaticFilesHandler::new(self.server_setting.get_public_root()));
     }
 }
