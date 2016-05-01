@@ -1,4 +1,3 @@
-#[macro_use] extern crate nickel; // remove?
 #[macro_use] extern crate iron;
 #[macro_use] extern crate staticfile;
 #[macro_use] extern crate mount;

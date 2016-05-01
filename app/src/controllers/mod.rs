@@ -10,12 +10,12 @@ pub fn get() -> Controller{
 fn register(router: &mut Router) {
 
 	// GET : index
-    router.add_route("/".to_string(), |_: &mut Request| {
+    router.add_route("".to_string(), |_: &mut Request| {
         Ok(Response::with((status::Ok, "Hello world !")))
     });
 
 	// GET : login
-    router.add_route("/login".to_string(), |_: &mut Request| {
+    router.add_route("login".to_string(), |_: &mut Request| {
         Ok(Response::with((status::Ok, "Hello login!")))
     });
 }

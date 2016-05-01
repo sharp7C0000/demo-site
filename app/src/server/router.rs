@@ -14,6 +14,7 @@ impl Router {
         Router { routes: HashMap::new() }
     }
 
+    // TODO : REST API (GET POST ...)
     pub fn add_route<H>(&mut self, path: String, handler: H) where H: Handler {
         self.routes.insert(path, Box::new(handler));
     }
