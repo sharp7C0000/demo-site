@@ -8,6 +8,9 @@ version = "*"
 [dependencies.mount]
 git = "https://github.com/iron/mount.git"
 
+[dependencies.handlebars-iron]
+git = "https://github.com/sunng87/handlebars-iron.git"
+
 [dependencies]
 iron = "*"
 staticfile = "*"

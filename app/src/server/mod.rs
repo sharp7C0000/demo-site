@@ -6,6 +6,8 @@ use std::path::Path;
 use staticfile::Static;
 use mount::Mount;
 
+use handlebars_iron::{Template, HandlebarsEngine, DirectorySource, MemorySource};
+
 pub mod config;
 pub mod controller;
 pub mod router;
@@ -24,7 +26,7 @@ pub fn start(controllers: &Vec<controller::Controller>) {
 }
 
 pub struct Server {
-    iron_server   : Iron<Mount>,
+    iron_server   : Iron<Chain>,
 	server_setting: config::ServerSetting
 }
 
@@ -45,10 +47,26 @@ impl Server {
         let pub_url  = format!("{}{}", server_setting.get_public_root(), "/");
         let pub_root = format!("{}{}", "/", PUBLUC_ROUTE.to_string());
 
+        // register mount
         mount.mount(&pub_root, Static::new(Path::new(&pub_url))).mount("/", router);
 
+        // register template engine
+        let mut hbse = HandlebarsEngine::new();
+
+        // add a directory source, all files with .hbs suffix will be loaded as template
+        hbse.add(Box::new(DirectorySource::new("./views/", ".hbs")));
+
+        // load templates from all registered sources
+        if let Err(r) = hbse.reload() {
+            panic!("{}", r);
+        }
+
+        // chaining middleware
+        let mut chain = Chain::new(mount);
+        chain.link_after(hbse);
+
         Server {
-            iron_server: Iron::new(mount),
+            iron_server: Iron::new(chain),
 			server_setting: server_setting
         }
     }
