@@ -2,8 +2,8 @@
 name = "demo_site"
 version = "0.1.0"
 
-[dependencies.nickel]
-version = "*"
+[dependencies.session]
+git = "https://github.com/iron/session.git"
 
 [dependencies.mount]
 git = "https://github.com/iron/mount.git"
