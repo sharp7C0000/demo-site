@@ -2,16 +2,10 @@
 name = "demo_site"
 version = "0.1.0"
 
-[dependencies.session]
-git = "https://github.com/iron/session.git"
-
-[dependencies.mount]
-git = "https://github.com/iron/mount.git"
-
-[dependencies.handlebars-iron]
-git = "https://github.com/sunng87/handlebars-iron.git"
-
 [dependencies]
 iron = "*"
+mount = "*"
+handlebars-iron = "*"
 staticfile = "*"
+iron-login = "0.4.1"
 toml = "0.1"
