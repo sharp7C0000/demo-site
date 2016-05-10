@@ -1,5 +1,5 @@
 use iron::prelude::*;
-use iron_login::User;
+use iron_login::LoginManager;
 use iron::status;
 
 use std::path::Path;
@@ -17,22 +17,6 @@ pub mod router;
 const PUBLUC_ROUTE: &'static str = "assets";
 const CONFIG_FILE_PATH: &'static str = "Config.toml";
 
-// test
-#[derive(Debug)]
-struct MyUser(String);
-impl MyUser {
-    fn new(user_id: &str) -> MyUser {
-        MyUser(user_id.to_owned())
-    }
-}
-impl User for MyUser {
-    fn from_user_id(_: &mut Request, user_id: &str) -> Option<MyUser> {
-        Some(MyUser(user_id.to_owned()))
-    }
-    fn get_user_id(&self) -> String {
-        self.0.to_owned()
-    }
-}
 
 // start entry function
 pub fn start(controllers: &Vec<controller::Controller>) {
@@ -79,41 +63,13 @@ impl Server {
             panic!("{}", r);
         }
 
-        /// A basic iron request handler
-fn request_handler(req: &mut Request) -> IronResult<Response> {
-    let login = MyUser::get_login(req);
-    // If a query (`?username`) is passed, set the username to that string
-    if let Some(ref uid) = req.url.query {
-        // If no username is passed, log out
-        if uid == "" {
-            Ok(Response::new()
-                   .set(::iron::status::Ok)
-                   .set(format!("Logged out"))
-                   .set(login.log_out()))
-        } else {
-            Ok(Response::new()
-                   .set(::iron::status::Ok)
-                   .set(format!("User set to '{}'", uid))
-                   .set(login.log_in(MyUser::new(uid))))
-        }
-    } else {
-        let user = login.get_user();
-        Ok(Response::new()
-               .set(::iron::status::Ok)
-               .set(format!("user = {:?}", user)))
-    }
-}
-
-let cookie_signing_key = b"My Secret Key"[..].to_owned();
-
         // chaining middleware
         let mut chain = Chain::new(mount);
 
-        //let mut chain2 = Chain::new(request_handler);
-    chain.around(::iron_login::LoginManager::new(cookie_signing_key));
-
         chain.link_after(hbse);
-        //chain.link_before(chain2);
+
+        // using login manager
+        chain.around(LoginManager::new(b"My Secret Key"[..].to_owned()));
 
         Server {
             iron_server: Iron::new(chain),
