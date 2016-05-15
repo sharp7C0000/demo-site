@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    {{> partial/header}}
+    <title>Ooops!!</title>
+    
+    <style>
+      #container {
+        text-align: center;
+      }  
+    </style>
+    
+  </head>
+
+  <body>
+
+    {{> partial/topbar}}
+
+    <!-- body container -->
+    <div id="container" class="container">
+       <h1 class="display-4">Ooops!</h1>
+       <p>
+         <h3 class="text-muted">{{message}}</h3>
+       </p>
+    </div>
+  </body>
+</html>

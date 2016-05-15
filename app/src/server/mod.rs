@@ -12,6 +12,7 @@ use handlebars_iron::{Template, HandlebarsEngine, DirectorySource, MemorySource}
 
 pub mod config;
 pub mod controller;
+pub mod middleware;
 
 // constants
 const PUBLUC_ROUTE: &'static str = "assets";
@@ -47,7 +48,7 @@ impl Server {
 
     let pub_url  = format!("{}{}", server_setting.get_public_root(), "/");
     let pub_root = format!("{}{}", "/", PUBLUC_ROUTE.to_string());
-
+    
     // register mount
     mount.mount(&pub_root, Static::new(Path::new(&pub_url))).mount("/", router);
 
@@ -65,6 +66,7 @@ impl Server {
     // chaining middleware
     let mut chain = Chain::new(mount);
 
+    chain.link_after(middleware::Custom404);
     chain.link_after(hbse);
 
     // using login manager
