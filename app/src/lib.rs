@@ -4,5 +4,6 @@
 #[macro_use] extern crate mount;
 #[macro_use] extern crate handlebars_iron;
 #[macro_use] extern crate toml;
+#[macro_use] extern crate router;
 
 pub mod server;

@@ -1,29 +1,28 @@
 use iron::prelude::*;
 use iron::status;
 use iron_login::User;
+use router::{Router};
 use handlebars_iron::{Template, HandlebarsEngine, DirectorySource, MemorySource};
 
 use server::controller::Controller;
-use server::router::Router;
 
 use std::collections::BTreeMap;
-
 
 // test
 #[derive(Debug)]
 struct MyUser(String);
 impl MyUser {
-    fn new(user_id: &str) -> MyUser {
-        MyUser(user_id.to_owned())
-    }
+  fn new(user_id: &str) -> MyUser {
+      MyUser(user_id.to_owned())
+  }
 }
 impl User for MyUser {
-    fn from_user_id(_: &mut Request, user_id: &str) -> Option<MyUser> {
-        Some(MyUser(user_id.to_owned()))
-    }
-    fn get_user_id(&self) -> String {
-        self.0.to_owned()
-    }
+  fn from_user_id(_: &mut Request, user_id: &str) -> Option<MyUser> {
+    Some(MyUser(user_id.to_owned()))
+  }
+  fn get_user_id(&self) -> String {
+    self.0.to_owned()
+  }
 }
 
 pub fn get() -> Controller{
@@ -33,64 +32,61 @@ pub fn get() -> Controller{
 fn register(router: &mut Router) {
 
 	// GET : index
-    router.add_route("".to_string(), |_: &mut Request| {
-        let mut resp = Response::new();
-        let mut data = BTreeMap::new();
-        resp.set_mut(Template::new("index", data)).set_mut(status::Ok);
-        Ok(resp)
-    });
+  router.get("".to_string(), |_: &mut Request| {
+    let mut resp = Response::new();
+    resp.set_mut(Template::new("index", ())).set_mut(status::Ok);
+    Ok(resp)
+  });
 
 	// GET : login
-    router.add_route("login".to_string(), |_: &mut Request| {
-        let mut resp = Response::new();
-        let mut data = BTreeMap::new();
-        resp.set_mut(Template::new("login", data)).set_mut(status::Ok);
-        Ok(resp)
-    });
+  router.get("login".to_string(), |_: &mut Request| {
+    let mut resp = Response::new();
+    resp.set_mut(Template::new("login", ())).set_mut(status::Ok);
+    Ok(resp)
+  });
 
-    // GET : Admin page
-    router.add_route("do-login".to_string(), |req: &mut Request| {
-        let login = MyUser::get_login(req);
-        // If a query (`?username`) is passed, set the username to that string
-        if let Some(ref uid) = req.url.query {
-            // If no username is passed, log out
-            if uid == "" {
-                Ok(Response::new()
-                       .set(::iron::status::Ok)
-                       .set(format!("Logged out"))
-                       .set(login.log_out()))
-            } else {
-                Ok(Response::new()
-                       .set(::iron::status::Ok)
-                       .set(format!("User set to '{}'", uid))
-                       .set(login.log_in(MyUser::new(uid))))
-            }
+  // GET : Admin page
+  router.get("do-login".to_string(), |req: &mut Request| {
+    let login = MyUser::get_login(req);
+    // If a query (`?username`) is passed, set the username to that string
+    if let Some(ref uid) = req.url.query {
+        // If no username is passed, log out
+        if uid == "" {
+          Ok(Response::new()
+          .set(::iron::status::Ok)
+          .set(format!("Logged out"))
+          .set(login.log_out()))
         } else {
-            let user = login.get_user();
-            Ok(Response::new()
-                   .set(::iron::status::Ok)
-                   .set(format!("user = {:?}", user)))
+          Ok(Response::new()
+          .set(::iron::status::Ok)
+          .set(format!("User set to '{}'", uid))
+          .set(login.log_in(MyUser::new(uid))))
         }
-    });
+    } else {
+      let user = login.get_user();
+      Ok(Response::new()
+      .set(::iron::status::Ok)
+      .set(format!("user = {:?}", user)))
+    }
+  });
 
-    // GET : Admin page
-    router.add_route("admin".to_string(), |req: &mut Request| {
-        let login = MyUser::get_login(req);
+  // GET : Admin page
+  router.get("admin".to_string(), |req: &mut Request| {
+    let login = MyUser::get_login(req);
 
-        match login.get_user() {
-            // The division was valid
-            Some(x) => {
-                Ok(Response::new()
-                       .set(::iron::status::Ok)
-                       .set(format!("okok")))
-            },
-            // The division was invalid
-            None    => {
-                Ok(Response::new()
-                       .set(::iron::status::Ok)
-                       .set(format!("fuckoff")))
-            },
-        }
-    });
-
+    match login.get_user() {
+      // The division was valid
+      Some(x) => {
+        Ok(Response::new()
+        .set(::iron::status::Ok)
+        .set(format!("okok")))
+      },
+      // The division was invalid
+      None    => {
+        Ok(Response::new()
+        .set(::iron::status::Ok)
+        .set(format!("fuckoff")))
+      },
+    }
+  });
 }
