@@ -13,6 +13,7 @@ use handlebars_iron::{Template, HandlebarsEngine, DirectorySource, MemorySource}
 pub mod config;
 pub mod controller;
 pub mod middleware;
+pub mod db;
 
 // constants
 const PUBLUC_ROUTE: &'static str = "assets";
@@ -22,6 +23,19 @@ const CONFIG_FILE_PATH: &'static str = "Config.toml";
 pub fn start(controllers: &Vec<controller::Controller>) {
 
 	let mut server = Server::new(controllers);
+
+  // match server.server_setting.db_auth {
+  //   Some(auth) => db::connect(
+  //     server.server_setting.get_db_ip(),
+  //     server.server_setting.get_db_port(),
+  //     server.server_setting.get_db_name()
+  //   ),
+  //   None => db::connect(
+  //     server.server_setting.get_db_ip(),
+  //     server.server_setting.get_db_port(),
+  //     server.server_setting.get_db_name()
+  //   )
+  // };
 
 	let listen_addr = "".to_string() + server.server_setting.get_ip() + ":" + server.server_setting.get_port();
     server.iron_server.http(&*listen_addr).unwrap();
@@ -48,7 +62,7 @@ impl Server {
 
     let pub_url  = format!("{}{}", server_setting.get_public_root(), "/");
     let pub_root = format!("{}{}", "/", PUBLUC_ROUTE.to_string());
-    
+
     // register mount
     mount.mount(&pub_root, Static::new(Path::new(&pub_url))).mount("/", router);
 

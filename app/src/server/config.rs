@@ -6,13 +6,28 @@ use std::path::Path;
 
 use toml;
 
+pub struct DbAuth {
+  // db user name
+  username: String,
+  // db password
+  password: String
+}
+
 pub struct ServerSetting {
 	// ip address
 	ip  : String,
 	// port number
 	port: String,
 	// public root
-	public_root: String
+	public_root: String,
+  // db ip address
+  db_ip: String,
+  // db port number
+  db_port: String,
+  // db name
+  db_name: String,
+  // db auth information
+  db_auth: Option<DbAuth>
 }
 
 impl ServerSetting {
@@ -38,7 +53,7 @@ impl ServerSetting {
     // parse toml
     let parsed = toml::Parser::new(&s).parse().unwrap();
     let config = parsed.get("config").unwrap();
-
+    
     // assign config values
     fn get_config_value(config: &toml::Value, lookup: &'static str) -> String {
       let result = match config.lookup(lookup) {
@@ -49,10 +64,24 @@ impl ServerSetting {
       String::from(result)
     };
 
+    // get db auth setting
+    let dbAuth = if let (Some(a), Some(b)) = (config.lookup("database.auth.username"), config.lookup("database.auth.password"))  {
+      Some(DbAuth{
+        username: String::from(a.as_str().unwrap()),
+        password: String::from(b.as_str().unwrap())
+      })
+    } else {
+      None
+    };
+
     ServerSetting {
       ip         : get_config_value(config, "ip"),
       port       : get_config_value(config, "port"),
-      public_root: get_config_value(config, "public_root")
+      public_root: get_config_value(config, "public_root"),
+      db_ip      : get_config_value(config, "database.ip"),
+      db_port    : get_config_value(config, "database.port"),
+      db_name    : get_config_value(config, "database.db_name"),
+      db_auth    : dbAuth
     }
   }
 
@@ -62,4 +91,11 @@ impl ServerSetting {
 
   pub fn get_public_root(&self) -> &String{ &self.public_root }
 
+  pub fn get_db_ip(&self) -> &String { &self.db_ip }
+
+  pub fn get_db_port(&self) -> &String { &self.db_port }
+  
+  pub fn get_db_name(&self) -> &String { &self.db_name }
+
+  pub fn get_db_auth(&self) -> &Option<DbAuth> { &self.db_auth }
 }

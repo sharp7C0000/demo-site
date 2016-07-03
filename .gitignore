@@ -3,3 +3,4 @@ app/target
 app/public
 assets/node_modules
 assets/temp
+.vscode/**
