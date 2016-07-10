@@ -24,18 +24,18 @@ pub fn start(controllers: &Vec<controller::Controller>) {
 
 	let mut server = Server::new(controllers);
 
-  // match server.server_setting.db_auth {
-  //   Some(auth) => db::connect(
-  //     server.server_setting.get_db_ip(),
-  //     server.server_setting.get_db_port(),
-  //     server.server_setting.get_db_name()
-  //   ),
-  //   None => db::connect(
-  //     server.server_setting.get_db_ip(),
-  //     server.server_setting.get_db_port(),
-  //     server.server_setting.get_db_name()
-  //   )
-  // };
+  match server.server_setting.get_db_auth().as_ref() {
+    Some(auth) => db::connect(
+      server.server_setting.get_db_ip(),
+      server.server_setting.get_db_port(),
+      server.server_setting.get_db_name()
+    ),
+    None       =>  db::connect(
+      server.server_setting.get_db_ip(),
+      server.server_setting.get_db_port(),
+      server.server_setting.get_db_name()
+    )
+  };
 
 	let listen_addr = "".to_string() + server.server_setting.get_ip() + ":" + server.server_setting.get_port();
     server.iron_server.http(&*listen_addr).unwrap();

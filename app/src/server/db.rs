@@ -2,24 +2,26 @@ use mongodb::{Client, ThreadedClient};
 use mongodb::db::ThreadedDatabase;
 use mongodb::db::options::CreateCollectionOptions;
 
-pub fn connect(ip: String, port: String, dbName: String) { 
+pub fn connect(ip: &String, port: &String, dbName: &String) { 
   // connect db
+
+  println!("hear!!!! {}", ip);
   
 
 
-  let client = Client::connect(&*ip, 1)
+  let client = Client::connect(&*ip, (*port).parse::<u16>().unwrap())
   .ok().expect("Failed to initialize client.");
 
-  // let db2 = client.db("dev");
+   let db2 = client.db(dbName);
 
-  // let collections = db2.list_collections(None)
-  // .ok().expect("Are you sure you’ve been authorized?");
+   let collections = db2.list_collections(None)
+   .ok().expect("Are you sure you’ve been authorized?");
 
   // db2.create_collection("comedies", None)
   // .ok().expect("Failed to create 'comedies' collection!");
 }
 
-pub fn connectWithAuth(ip: String, port: u16, dbName: String, username: String, password: String) { 
+pub fn connectWithAuth(ip: &String, port: u16, dbName: &String, username: &String, password: &String) { 
   // connect db
   // let client = Client::connect(&*ip, port)
   // .ok().expect("Failed to initialize client.");
