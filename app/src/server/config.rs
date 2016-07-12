@@ -13,6 +13,11 @@ pub struct DbAuth {
   password: String
 }
 
+impl DbAuth {
+  pub fn get_username(&self) -> &String { &self.username }
+  pub fn get_password(&self) -> &String { &self.password }
+}
+
 pub struct ServerSetting {
 	// ip address
 	ip  : String,
