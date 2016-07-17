@@ -18,6 +18,7 @@ var glob   = require('glob');
 var es     = require('event-stream');
 var rename = require('gulp-rename');
 var es2015 = require('babel-preset-es2015');
+var ncu    = require('npm-check-updates');
 
 var Server = require('karma').Server;
 
@@ -92,8 +93,28 @@ gulp.task('test', function (done) {
   }, done).start();
 });
 
+gulp.task('ncu', function(done) {
+  ncu.run({
+    // Always specify the path to the package file 
+    packageFile: 'package.json',
+    // Any command-line option can be specified here. 
+    // These are set by default: 
+    silent: true,
+    jsonUpgraded: true
+  }).then(function(upgraded) {
+    gutil.log('dependencies to upgrade:', upgraded);
+    done();
+  });
+});
+
 // define the browserify-watch as dependencies for this task
-gulp.task('watch', ['compile', 'browserify-watch', 'sass-watch']);
+gulp.task('watch', ['ncu'], function () {
+  gulp.start("compile");
+  gulp.start('browserify-watch');
+  gulp.start('sass-watch');
+  gulp.start("compile");
+});
+
 gulp.task('compile', ['clean'], function() {
   gulp.start("browserify");
   gulp.start("sass");
