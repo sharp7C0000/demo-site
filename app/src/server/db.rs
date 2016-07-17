@@ -1,77 +1,51 @@
 use mongodb::{Client, ThreadedClient};
 use mongodb::db::ThreadedDatabase;
+use mongodb::db::DatabaseInner;
 use mongodb::db::options::CreateCollectionOptions;
 
-// pub struct DB {
-//   db: 
-// }
+use std::sync::Arc;
 
-impl Controller {
-  pub fn new(register_fn: fn(router: &mut Router)) -> Controller {
-    Controller {
-      register_fn: register_fn
+fn parse_port(port: &String) -> u16 {
+  (*port).parse::<u16>().unwrap()
+}
+
+pub struct DB {
+	connection: Arc<DatabaseInner>
+}
+
+impl DB {
+
+  pub fn new(ip: &String, port: &String, db_name: &String) -> DB {
+    let client = Client::connect(&*ip, parse_port(port))
+    .ok()
+    .expect("Failed to initialize client.");
+    
+    let connected_db:Arc<DatabaseInner> = client.db(db_name);
+
+    DB {
+      connection: connected_db
     }
   }
 
-	pub fn get_register_fn(&self) -> fn(router: &mut Router) { self.register_fn }
-}
+  pub fn new_with_auth(ip: &String, port: &String, db_name: &String, username: &String, password: &String) -> DB {
+    let client = Client::connect(&*ip, parse_port(port))
+    .ok()
+    .expect("Failed to initialize client.");
 
+    // auth
+    let admin_db = client.db("admin");
+    admin_db.auth(username, password)
+    .ok()
+    .expect("Failed to authorize");
 
+    println!("test!!!!!! connected");
 
-fn parse_port(port: &String) -> u16 {
-   (*port).parse::<u16>().unwrap()
-}
-
-pub fn connect(ip: &String, port: &String, dbName: &String) { 
-  
-  let client = Client::connect(&*ip, parse_port(port))
-  .ok()
-  .expect("Failed to initialize client.");
-
-   let db2 = client.db(dbName);
-
-   let collections = db2.list_collections(None)
-   .ok().expect("Are you sure you’ve been authorized?");
-
-  // db2.create_collection("comedies", None)
-  // .ok().expect("Failed to create 'comedies' collection!");
-}
-
-pub fn connectWithAuth(ip: &String, port: &String, dbName: &String, username: &String, password: &String) { 
-  
-  let client = Client::connect(&*ip, parse_port(port))
-  .ok()
-  .expect("Failed to initialize client.");
-
-  // auth
-  let db = client.db("admin");
-  db.auth(username, password)
-  .ok()
-  .expect("Failed to authorize");
-
-  let db2 = client.db(dbName);
-
-   
-
-   let collections = db2.list_collections(None)
-   .ok().expect("Are you sure you’ve been authorized?");
-
-   println!("{}:?", db2);
-
-
-  // let client = Client::connect(&*ip, port)
-  // .ok().expect("Failed to initialize client.");
-
-  // let db = client.db("admin");
-
-  // db.auth(username, password)
-  // .ok().expect("Failed to authorize user 'root'.");
-
-  // let db2 = client.db("dev");
-
-  // let collections = db2.list_collections(None)
-  // .ok().expect("Are you sure you’ve been authorized?");
-
-  // db2.create_collection("comedies", None)
-  // .ok().expect("Failed to create 'comedies' collection!");
+    let connected_db = client.db(db_name);
+    let collections  = connected_db.list_collections(None)
+    .ok().expect("Are you sure you’ve been authorized?");
+    
+    DB {
+      connection: connected_db
+    }
+  }
 }

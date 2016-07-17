@@ -24,15 +24,16 @@ pub fn start(controllers: &Vec<controller::Controller>) {
 
 	let mut server = Server::new(controllers);
 
-  match server.server_setting.get_db_auth().as_ref() {
-    Some(auth) => db::connectWithAuth(
+  // connect to db
+  let mut db = match server.server_setting.get_db_auth().as_ref() {
+    Some(auth) => db::DB::new_with_auth(
       server.server_setting.get_db_ip(),
       server.server_setting.get_db_port(),
       server.server_setting.get_db_name(),
       auth.get_username(),
       auth.get_username()
     ),
-    None       =>  db::connect(
+    None       =>  db::DB::new(
       server.server_setting.get_db_ip(),
       server.server_setting.get_db_port(),
       server.server_setting.get_db_name()
