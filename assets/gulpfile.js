@@ -18,7 +18,14 @@ var glob   = require('glob');
 var es     = require('event-stream');
 var rename = require('gulp-rename');
 var es2015 = require('babel-preset-es2015');
-var ncu    = require('npm-check-updates');
+
+
+var ncu     = require('npm-check-updates');
+var webpack = require('webpack-stream');
+var babelLoader = require('babel-loader');
+
+const SCRIPT_PATH = "./scripts";
+
 
 var Server = require('karma').Server;
 
@@ -93,6 +100,24 @@ gulp.task('test', function (done) {
   }, done).start();
 });
 
+// define the browserify-watch as dependencies for this task
+gulp.task('watch', ['ncu'], function () {
+  gulp.start("compile");
+  gulp.start('browserify-watch');
+  gulp.start('sass-watch');
+  gulp.start("compile");
+});
+
+gulp.task('compile', ['clean'], function() {
+  gulp.start("browserify");
+  gulp.start("sass");
+  gulp.start("resource");
+});
+
+//////////////////////////////////////////////////////////////////////////////////
+
+///////////////// new task //////////////////////////////////////////////////////
+
 gulp.task('ncu', function(done) {
   ncu.run({
     // Always specify the path to the package file 
@@ -107,16 +132,29 @@ gulp.task('ncu', function(done) {
   });
 });
 
-// define the browserify-watch as dependencies for this task
-gulp.task('watch', ['ncu'], function () {
-  gulp.start("compile");
-  gulp.start('browserify-watch');
-  gulp.start('sass-watch');
-  gulp.start("compile");
+gulp.task('webtest', function() {
+  return gulp.src(SCRIPT_PATH + '/src/main-mtest.js')
+    .pipe(webpack({
+   // watch: true,
+    module: {
+      // babel loader
+      loaders: [
+        {
+          test: /\.js$/,
+          exclude: /(node_modules|bower_components)/,
+          loader: 'babel',
+          query: {
+            presets: ['es2015']
+          }
+        }
+      ],
+    },
+
+    output: {
+            filename: "[name].js"
+          }
+
+  }))
+    .pipe(gulp.dest('dist/'));
 });
 
-gulp.task('compile', ['clean'], function() {
-  gulp.start("browserify");
-  gulp.start("sass");
-  gulp.start("resource");
-});
