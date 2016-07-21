@@ -209,6 +209,10 @@ gulp.task("webpack-dev-server", function(callback) {
 
 	new WebpackDevServer(compiler, {
 		publicPath: "/dist/",
+    watchOptions: {
+    aggregateTimeout: 300,
+    poll: 1000
+  },
 		stats: {
 			colors: true
 		}}).listen(6768, "0.0.0.0", function(err) {
