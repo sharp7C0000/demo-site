@@ -1,5 +1,6 @@
 'use strict';
 
+var path = require("path");
 var browserify = require('browserify');
 var watchify = require('watchify');
 var babelify = require('babelify');
@@ -21,8 +22,11 @@ var es2015 = require('babel-preset-es2015');
 
 
 var ncu     = require('npm-check-updates');
-var webpack = require('webpack-stream');
+var webpacks = require('webpack-stream');
+var webpack = require('webpack');
 var babelLoader = require('babel-loader');
+
+var WebpackDevServer = require("webpack-dev-server");
 
 const SCRIPT_PATH = "./scripts";
 
@@ -134,8 +138,8 @@ gulp.task('ncu', function(done) {
 
 gulp.task('webtest', function() {
   return gulp.src(SCRIPT_PATH + '/src/main-mtest.js')
-    .pipe(webpack({
-   // watch: true,
+    .pipe(webpacks({
+    watch: true,
     module: {
       // babel loader
       loaders: [
@@ -156,5 +160,60 @@ gulp.task('webtest', function() {
 
   }))
     .pipe(gulp.dest('dist/'));
+});
+
+gulp.task("webpack-dev-server", function(callback) {
+	// modify some webpack config options
+	//var myConfig = Object.create(webpackConfig);
+	//myConfig.devtool = "eval";
+	//myConfig.debug = true;
+
+	// Start a webpack-dev-server
+
+  var compiler = webpack({
+    devtool: "eval",
+    debug: true,
+    watch: true,
+     entry: './scripts/src/main-mtest.js',
+    module: {
+      // babel loader
+      loaders: [
+        {
+          test: /\.js$/,
+          exclude: /(node_modules|bower_components)/,
+          loader: 'babel',
+          query: {
+            presets: ['es2015']
+          }
+        }
+      ],
+    },
+
+    output: {
+            filename: "r.js",
+            publicPath: "dist/",
+            path: "/home/vagrant/dev/demo-site/assets/dist/",
+          }
+  });
+
+  var compilter2 = webpack({
+  entry: {
+    app: ["./scripts/src/main-mtest.js"]
+  },
+  output: {
+    path: path.resolve(__dirname, "build"),
+    publicPath: "/dist/",
+    filename: "bundle.js"
+  }
+});
+
+	new WebpackDevServer(compiler, {
+		publicPath: "/dist/",
+		stats: {
+			colors: true
+		}}).listen(6768, "0.0.0.0", function(err) {
+		if(err) throw new gutil.PluginError("webpack-dev-server", err);
+		gutil.log("[webpack-dev-server]", "http://localhost:8080/webpack-dev-server/index.html");
+	});
 });
 
