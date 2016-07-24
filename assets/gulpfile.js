@@ -21,12 +21,13 @@ var rename = require('gulp-rename');
 var es2015 = require('babel-preset-es2015');
 
 
-var ncu     = require('npm-check-updates');
+var ncu              = require('npm-check-updates');
+var WebpackDevServer = require("webpack-dev-server");
+var webpackConfig    = require("./webpack.config.js");
+
 var webpacks = require('webpack-stream');
 var webpack = require('webpack');
 var babelLoader = require('babel-loader');
-
-var WebpackDevServer = require("webpack-dev-server");
 
 const SCRIPT_PATH = "./scripts";
 
@@ -122,13 +123,13 @@ gulp.task('compile', ['clean'], function() {
 
 ///////////////// new task //////////////////////////////////////////////////////
 
+/**
+ * 업그레이드 해야 할 node package가 있는지 확인
+ */
 gulp.task('ncu', function(done) {
   ncu.run({
-    // Always specify the path to the package file 
     packageFile: 'package.json',
-    // Any command-line option can be specified here. 
-    // These are set by default: 
-    silent: true,
+    silent: false,
     jsonUpgraded: true
   }).then(function(upgraded) {
     gutil.log('dependencies to upgrade:', upgraded);
@@ -136,88 +137,30 @@ gulp.task('ncu', function(done) {
   });
 });
 
-gulp.task('webtest', function() {
-  return gulp.src(SCRIPT_PATH + '/src/main-mtest.js')
-    .pipe(webpacks({
-    watch: true,
-    module: {
-      // babel loader
-      loaders: [
-        {
-          test: /\.js$/,
-          exclude: /(node_modules|bower_components)/,
-          loader: 'babel',
-          query: {
-            presets: ['es2015']
-          }
-        }
-      ],
-    },
-
-    output: {
-            filename: "[name].js"
-          }
-
-  }))
-    .pipe(gulp.dest('dist/'));
-});
-
+/**
+ * webpack dev server 실행
+ */
 gulp.task("webpack-dev-server", function(callback) {
-	// modify some webpack config options
-	//var myConfig = Object.create(webpackConfig);
-	//myConfig.devtool = "eval";
-	//myConfig.debug = true;
 
-	// Start a webpack-dev-server
+  var IP   = "0.0.0.0";
+  var PORT = 6768;
 
-  var compiler = webpack({
-    devtool: "eval",
-    debug: true,
-    watch: true,
-     entry: './scripts/src/main-mtest.js',
-    module: {
-      // babel loader
-      loaders: [
-        {
-          test: /\.js$/,
-          exclude: /(node_modules|bower_components)/,
-          loader: 'babel',
-          query: {
-            presets: ['es2015']
-          }
-        }
-      ],
-    },
+	var conf = Object.create(webpackConfig);
+	conf.devtool           = "eval";
+	conf.debug             = true;
 
-    output: {
-            filename: "r.js",
-            publicPath: "dist/",
-            path: "/home/vagrant/dev/demo-site/assets/dist/",
-          }
-  });
-
-  var compilter2 = webpack({
-  entry: {
-    app: ["./scripts/src/main-mtest.js"]
-  },
-  output: {
-    path: path.resolve(__dirname, "build"),
-    publicPath: "/dist/",
-    filename: "bundle.js"
-  }
-});
-
-	new WebpackDevServer(compiler, {
-		publicPath: "/dist/",
+	new WebpackDevServer(webpack(conf), {
+		publicPath: "/assets/",
     watchOptions: {
-    aggregateTimeout: 300,
-    poll: 1000
-  },
+      aggregateTimeout: 300,
+      poll            : 1000
+    },
 		stats: {
 			colors: true
-		}}).listen(6768, "0.0.0.0", function(err) {
+		}
+  })
+  .listen(PORT, IP, function(err) {
 		if(err) throw new gutil.PluginError("webpack-dev-server", err);
-		gutil.log("[webpack-dev-server]", "http://localhost:8080/webpack-dev-server/index.html");
-	});
+		gutil.log("[webpack-dev-server]", "http://" + IP + ":" + PORT + "/webpack-dev-server")
+  });
 });
-

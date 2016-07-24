@@ -4,7 +4,7 @@ import B from "./mtest/b.js";
 import Vue from "vue";
 import $ from "jquery";
 
-let k = 1000;
+let k = 8000;
 
 let array = [1,2,3,4,5,6];
 
