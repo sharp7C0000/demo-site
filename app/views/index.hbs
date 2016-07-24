@@ -12,6 +12,18 @@
     <!-- body container -->
     <div id="container" class="container">
       <div class="row">
+
+        
+    <div id="app">
+      <template>
+      ABCD
+      <test></test>
+      </template>
+    </div>
+
+    
+
+
         <div class="card card-inverse" style="background-color: #333; border-color: #333;">
           <div class="card-block">
             <h3 class="card-title">Special title treatment</h3>
@@ -24,7 +36,12 @@
 
     <footer>
       <!--<script async src="assets/js/test.js"></script>-->
-      <script src="http://localhost:6768/webpack-dev-server/assets/page1.bundle.js" />
+      <!--<script src="http://localhost:6768/assets/vendor.js"/>-->
+
+      <!-- dev mode -->
+      <script src="http://localhost:6768/webpack-dev-server.js"></script>
+      <script src="http://localhost:6768/assets/vendor.js"></script>
+      <script src="http://localhost:6768/assets/page1.bundle.js"></script>
     </footer>
   </body>
 </html>

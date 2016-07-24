@@ -146,11 +146,13 @@ gulp.task("webpack-dev-server", function(callback) {
   var PORT = 6768;
 
 	var conf = Object.create(webpackConfig);
-	conf.devtool           = "eval";
-	conf.debug             = true;
+	conf.devtool = "eval";
+	conf.debug   = true;
 
 	new WebpackDevServer(webpack(conf), {
-		publicPath: "/assets/",
+		publicPath : "/assets/",
+    historyApiFallback: true,
+    hot               : false,
     watchOptions: {
       aggregateTimeout: 300,
       poll            : 1000

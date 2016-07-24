@@ -25,8 +25,7 @@ module.exports = {
   entry: webpackEntry,
   output: {
     path    : __dirname,
-    filename: "[name].bundle.js",
-    publicPath: "/home/vagrant/dev/demo-site/app/public/js"
+    filename: "[name].bundle.js"
   },
   module: {
     // babel loader

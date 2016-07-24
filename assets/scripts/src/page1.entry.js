@@ -1,8 +1,10 @@
 //import A from "./mtest/a.js";
 //import B from "./mtest/b.js";
 
-import Vue from "vue";
+import Vue from "vue/dist/vue.js";
 import $ from "jquery";
+
+global.$ = $;
 
 import Comp from "./page1/comp.vue";
 
@@ -15,4 +17,19 @@ array.map((a) => {
   console.log(a);
 });
 
-console.log("hear");
+console.log("hear!!!!");
+
+new Vue({
+  el: "#app",
+
+  ready () {
+    console.log("readey");
+  },
+
+  components: {
+    "test": Comp
+  }
+
+});
+
+//alert("k");

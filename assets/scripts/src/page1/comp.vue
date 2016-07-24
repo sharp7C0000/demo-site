@@ -1,11 +1,11 @@
 <style lang="sass">
-  BODY {
-    background-color: blue;
+  .blue {
+    color: blue;
   }
 </style>
 
 <template>
-  <h1>HI {{message}}</h1>
+  <h1>HI <span class="blue">{{message}}</blue></h1>
 </template>
 
 <script>
