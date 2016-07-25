@@ -1,127 +1,13 @@
 'use strict';
 
-var path = require("path");
-var browserify = require('browserify');
-var watchify = require('watchify');
-var babelify = require('babelify');
-var browserifyCss = require('browserify-css');
 var gulp = require('gulp');
-var clean = require('gulp-clean');
-var source = require('vinyl-source-stream');
-var buffer = require('vinyl-buffer');
-var uglify = require('gulp-uglify');
-var sourcemaps = require('gulp-sourcemaps');
-var gutil = require('gulp-util');
-var sass = require('gulp-sass');
-var merge = require('merge-stream');
-var concat = require('gulp-concat');
-var glob   = require('glob');
-var es     = require('event-stream');
-var rename = require('gulp-rename');
-var es2015 = require('babel-preset-es2015');
-
+var gutil = require('gulp-util');;
 
 var ncu              = require('npm-check-updates');
 var WebpackDevServer = require("webpack-dev-server");
 var webpackConfig    = require("./webpack.config.js");
-
-var webpacks = require('webpack-stream');
-var webpack = require('webpack');
-var babelLoader = require('babel-loader');
-
-const SCRIPT_PATH = "./scripts";
-
-
-var Server = require('karma').Server;
-
-gulp.task('browserify', function(done){
-  browserifyTask(false, done);
-});
-
-gulp.task('browserify-watch', function(done){
-  browserifyTask(true, done);
-});
-
-var browserifyTask = function(watch, done) {
-
-  function bundle(b, entry) {
-
-    var fileNameRegex = /[\w-]+\./;
-    var fileName      = fileNameRegex.exec(entry)[0].replace(".", ".js").replace("main-", "");
-
-    return b
-    .bundle()
-    .pipe(source(fileName))
-    .pipe(gulp.dest('../app/public/js/'));
-  };
-
-  glob('./scripts/src/main-**.js', function(err, files) {
-    if(err) done(err);
-
-    var tasks = files.map(function(entry) {
-
-      var b = browserify({ entries: [entry] })
-      .transform(babelify, {presets: [es2015]});
-
-      if(watch) {
-        var wb = watchify(b);
-        wb.on('update', function(){
-          return bundle(b, entry);
-        });
-      }
-
-      return bundle(b, entry);
-    });
-
-    es.merge(tasks).on('end', done);
-  });
-}
-
-gulp.task('sass', function() {
-  return gulp.src('./sass/**/*.scss')
-    .pipe(sass().on('error', sass.logError))
-    .pipe(gulp.dest('../app/public/css'));
-});
-
-gulp.task('resource', function () {
-  return gulp.src('./node_modules/font-awesome/fonts/**.*', {base: './node_modules/font-awesome/fonts/'})
-  .pipe(gulp.dest('../app/public/fonts'));
-});
-
-gulp.task('sass-watch', function(){
-  // watch other files, for example .less file
-  gulp.watch('./sass/**/*.scss', ['sass']);
-});
-
-gulp.task('clean', function () {
-  return gulp.src('../app/public/*')
-		.pipe(clean({force: true}));
-});
-
-gulp.task('test', function (done) {
-  new Server({
-    configFile: __dirname + '/karma.conf.js',
-    singleRun: true
-  }, done).start();
-});
-
-// define the browserify-watch as dependencies for this task
-gulp.task('watch', ['ncu'], function () {
-  gulp.start("compile");
-  gulp.start('browserify-watch');
-  gulp.start('sass-watch');
-  gulp.start("compile");
-});
-
-gulp.task('compile', ['clean'], function() {
-  gulp.start("browserify");
-  gulp.start("sass");
-  gulp.start("resource");
-});
-
-//////////////////////////////////////////////////////////////////////////////////
-
-///////////////// new task //////////////////////////////////////////////////////
+var webpack          = require('webpack');
+var KarmaServer      = require('karma').Server;
 
 /**
  * 업그레이드 해야 할 node package가 있는지 확인
@@ -165,4 +51,21 @@ gulp.task("webpack-dev-server", function(callback) {
 		if(err) throw new gutil.PluginError("webpack-dev-server", err);
 		gutil.log("[webpack-dev-server]", "http://" + IP + ":" + PORT + "/webpack-dev-server")
   });
+});
+
+/**
+ * test
+ */
+gulp.task('test', function (done) {
+  new KarmaServer({
+    configFile: __dirname + '/karma.conf.js',
+    singleRun: true
+  }, done).start();
+});
+
+/**
+ * start task
+ */
+gulp.task("dev", ['ncu'], function(callback){
+  gulp.start("webpack-dev-server");
 });

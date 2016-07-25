@@ -1,12 +1,12 @@
 //import A from "./mtest/a.js";
 //import B from "./mtest/b.js";
 
-import Vue from "vue/dist/vue.js";
+import Vue from 'vue/dist/vue.js';
 import $ from "jquery";
 
 global.$ = $;
 
-import Comp from "./page1/comp.vue";
+import Comp from "./index/comp.vue";
 
 let k = 3000;
 

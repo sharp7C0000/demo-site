@@ -1,4 +1,5 @@
 <style lang="sass">
+$font-stack:    Helvetica, sans-serif;
   .blue {
     color: blue;
   }

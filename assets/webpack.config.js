@@ -1,4 +1,6 @@
-var babelLoader = require('babel-loader');
+var babelLoader           = require('babel-loader');
+var babelTransformRuntime = require('babel-plugin-transform-runtime');
+
 var path        = require("path");
 var glob        = require('glob');
 var webpack     = require('webpack');
@@ -7,6 +9,7 @@ var ENTRY_PATTERN = "./scripts/**/*.entry.js";
 var VENDOR_CHUNK  = "vendor";
 var VENDORS = [
   "vue",
+  "vue/dist/vue.js",
   "jquery"
 ]
 
@@ -27,20 +30,26 @@ module.exports = {
     path    : __dirname,
     filename: "[name].bundle.js"
   },
+  babel: {
+    presets: ['es2015'],
+    plugins: ['transform-runtime']
+  },
   module: {
-    // babel loader
     loaders: [
+      // vue loader
+      {
+        test: /\.vue$/, 
+        loader: 'vue'
+      },
+      // babel loader
       {
         test: /\.js$/,
         exclude: /(node_modules|bower_components)/,
         loader: 'babel',
         query: {
-          presets: ['es2015']
+          presets: ['es2015'],
+          plugins: ['transform-runtime']
         }
-      },
-      {
-        test: /\.vue$/, 
-        loader: 'vue'
       }
     ]
   },
