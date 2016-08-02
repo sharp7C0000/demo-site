@@ -10,7 +10,9 @@ var VENDOR_CHUNK  = "vendor";
 var VENDORS = [
   "vue",
   "vue/dist/vue.js",
-  "jquery"
+  "jquery",
+  "tether",
+  "bootstrap/dist/js/bootstrap.js"
 ]
 
 var webpackEntry = {};
@@ -50,10 +52,26 @@ module.exports = {
           presets: ['es2015'],
           plugins: ['transform-runtime']
         }
+      },
+      // sass loader
+      {
+        test: /\.scss$/,
+        loaders: ["style", "css", "sass"]
+      },
+      // font loader
+      {
+        test: /\.(eot|svg|ttf|woff(2)?)(\?v=\d+\.\d+\.\d+)?/,
+        loader: 'url'
       }
     ]
   },
   plugins: [
-    new webpack.optimize.CommonsChunkPlugin(VENDOR_CHUNK, VENDOR_CHUNK + ".js")
+    new webpack.optimize.CommonsChunkPlugin(VENDOR_CHUNK, VENDOR_CHUNK + ".js"),
+    new webpack.ProvidePlugin({
+      '$'            : 'jquery',
+      'jQuery'       : 'jquery',
+      'window.jQuery': 'jquery',
+      'window.Tether': 'tether'
+    })
   ]
 };

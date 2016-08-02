@@ -54,7 +54,7 @@ gulp.task("webpack-dev-server", function(callback) {
 });
 
 /**
- * test
+ * TODO : test 
  */
 gulp.task('test', function (done) {
   new KarmaServer({

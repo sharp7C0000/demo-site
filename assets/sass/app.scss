@@ -1,6 +1,9 @@
-@import '../node_modules/bootstrap/scss/bootstrap-flex';
-@import '../node_modules/font-awesome/scss/font-awesome';
-@import '../node_modules/bootstrap/scss/mixins/_breakpoints';
+
+$fa-font-path: "~font-awesome/fonts";
+@import "~font-awesome/scss/font-awesome";
+
+@import '~bootstrap/scss/bootstrap-flex';
+@import '~bootstrap/scss/mixins/_breakpoints';
 
 html {
   #container {
@@ -12,20 +15,4 @@ html {
   }
 }
 
-/** responsive **/
 
-@include media-breakpoint-up(xs) {
-  #top-bar {
-    .button-title {
-      display: none;
-    }
-  }
-}
-
-@include media-breakpoint-up(sm) {
-  #top-bar {
-    .button-title {
-      display: inline!important;
-    }
-  }
-}

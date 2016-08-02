@@ -1,23 +1,8 @@
-//import A from "./mtest/a.js";
-//import B from "./mtest/b.js";
+import Vue       from 'vue/dist/vue.js';
+import Comp      from "./index/comp.vue";
+import Topbar    from "./index/topbar.vue";
 
-import Vue from 'vue/dist/vue.js';
-import $ from "jquery";
-
-global.$ = $;
-
-import Comp from "./index/comp.vue";
-
-let k = 3000;
-
-let array = [1,2,3,4,5,6];
-
-array.map((a) => {
-  console.log(a);
-  console.log(a);
-});
-
-console.log("hear!!!!");
+require("../../sass/app.scss");
 
 new Vue({
   el: "#app",
@@ -27,9 +12,8 @@ new Vue({
   },
 
   components: {
-    "test": Comp
+    "topbar": Topbar,
+    "test"  : Comp
   }
 
 });
-
-//alert("k");
