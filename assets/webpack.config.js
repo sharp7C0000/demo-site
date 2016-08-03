@@ -11,6 +11,7 @@ var VENDORS = [
   "vue",
   "vue/dist/vue.js",
   "vue-router",
+  "vuex/dist/vuex.js",
   "jquery",
   "tether",
   "bootstrap/dist/js/bootstrap.js"

@@ -14,17 +14,17 @@
 
   @include media-breakpoint-up(sm) {
     .login-container {
-      @include make-col-offset(2);
-      @include make-col(8);
-      @include make-col-offset(2);
+      @include make-col-offset(3);
+      @include make-col(6);
+      @include make-col-offset(3);
     }
   }
 
   @include media-breakpoint-up(lg) {
     .login-container {
-      @include make-col-offset(3);
-      @include make-col(6);
-      @include make-col-offset(3);
+      @include make-col-offset(4);
+      @include make-col(4);
+      @include make-col-offset(4);
     }
   }
 </style>
