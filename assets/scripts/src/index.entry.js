@@ -1,19 +1,32 @@
 import Vue       from 'vue/dist/vue.js';
-import Comp      from "./index/comp.vue";
+import VueRouter from 'vue-router';
 import Topbar    from "./index/topbar.vue";
+import Test      from "./index/test.vue";
 
 require("../../sass/app.scss");
 
-new Vue({
-  el: "#app",
+Vue.use(VueRouter);
 
-  ready () {
-    console.log("readey");
-  },
+Vue.component('topbar', Topbar);
 
-  components: {
-    "topbar": Topbar,
-    "test"  : Comp
-  }
-
+const router = new VueRouter({
+  mode: 'history',
+  base: __dirname,
+  routes: [
+    { path: '/', component: Test }
+  ]
 });
+
+new Vue({
+  router,
+  template: `
+    <div id="app">
+      <topbar></topbar>
+      <div id="container" class="container">
+        <div class="row">
+          <router-view></router-view>
+        </div>
+      </div>
+    </div>
+  `
+}).$mount('#app');

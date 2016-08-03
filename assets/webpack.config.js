@@ -10,6 +10,7 @@ var VENDOR_CHUNK  = "vendor";
 var VENDORS = [
   "vue",
   "vue/dist/vue.js",
+  "vue-router",
   "jquery",
   "tether",
   "bootstrap/dist/js/bootstrap.js"
