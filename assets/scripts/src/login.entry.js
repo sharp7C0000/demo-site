@@ -1,7 +1,7 @@
 import Vue       from 'vue/dist/vue.js';
 import VueRouter from 'vue-router';
 import Topbar    from "./common/topbar.vue";
-import Test      from "./index/test.vue";
+import App       from "./login/app.vue";
 
 require("../../sass/app.scss");
 
@@ -13,7 +13,7 @@ const router = new VueRouter({
   mode: 'history',
   base: __dirname,
   routes: [
-    { path: '/', component: Test }
+    { path: '/login', component: App }
   ]
 });
 
