@@ -38,11 +38,11 @@
           <form action="#" v-on:submit.prevent="submit">
             <fieldset class="form-group">
               <label>Email</label>
-              <input type="text" class="form-control" placeholder="Email">
+              <input type="text" class="form-control" placeholder="Email" :value="getFormData.email" @input="updateEmail">
             </fieldset>
             <fieldset class="form-group">
               <label>Password</label>
-              <input type="password" class="form-control" placeholder="Password">
+              <input type="password" class="form-control" placeholder="Password" :value="getFormData.password" @input="updatePassword">
             </fieldset>
             <div class="alert alert-danger" role="alert" v-if="getError">
               <strong>Oh snap!</strong> {{getError}}
@@ -58,7 +58,7 @@
 <script>
 
   import { mapGetters, mapActions } from 'vuex';
-  
+
   export default {
 
     ready () {
@@ -68,10 +68,13 @@
     components: {
       "login-form": {
         computed: mapGetters([
-          'getError'
+          'getError',
+          'getFormData'
         ]),
         methods: mapActions([
-          'errorOccur'
+          'errorOccur',
+          'updateEmail',
+          'updatePassword'
         ])
       }
     },
