@@ -30,37 +30,53 @@
 </style>
 
 <template>
-  <div class="login-container">
-    <div class="card">
-      <div class="card-block">
-        <h3 class="card-title">LOGIN</h3>
-        <form action="#" v-on:submit.prevent="submit">
-          <fieldset class="form-group">
-            <label>Email</label>
-            <input type="text" class="form-control" placeholder="Email" v-model="formData.email">
-          </fieldset>
-          <fieldset class="form-group">
-            <label>Password</label>
-            <input type="password" class="form-control" placeholder="Password" v-model="formData.password">
-          </fieldset>
-          <button type="submit" class="btn btn-primary btn-block">Login</button>
-        </form>
+  <login-form inline-template>
+    <div class="login-container">
+      <div class="card">
+        <div class="card-block">
+          <h3 class="card-title">LOGIN</h3>
+          <form action="#" v-on:submit.prevent="submit">
+            <fieldset class="form-group">
+              <label>Email</label>
+              <input type="text" class="form-control" placeholder="Email">
+            </fieldset>
+            <fieldset class="form-group">
+              <label>Password</label>
+              <input type="password" class="form-control" placeholder="Password">
+            </fieldset>
+            <div class="alert alert-danger" role="alert" v-if="getError">
+              <strong>Oh snap!</strong> {{getError}}
+            </div>
+            <button type="button" v-on:click="errorOccur" class="btn btn-primary btn-block">Login</button>
+          </form>
+        </div>
       </div>
     </div>
-  </div>
+  </login-form>
 </template>
 
 <script>
-  export default {
 
-    data () {
-      return {
-        formData: {}
-      }
-    },
+  import { mapGetters, mapActions } from 'vuex';
+  
+  export default {
 
     ready () {
       console.log("ready!!");
-    }
+    },
+
+    components: {
+      "login-form": {
+        computed: mapGetters([
+          'getError'
+        ]),
+        methods: mapActions([
+          'errorOccur'
+        ])
+      }
+    },
+    
+    //store
+
   }
 </script>
