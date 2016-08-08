@@ -1,10 +1,12 @@
-import Vue       from 'vue/dist/vue.js';
+import Vue  from 'vue/dist/vue.js';
 import Vuex from 'vuex';
+
+import Service from './service.js';
 
 Vue.use(Vuex);
 
 const state = {
-  error   : null,
+  formError: {},
   formData: {
     email   : null,
     password: null
@@ -12,8 +14,8 @@ const state = {
 };
 
 const mutations = {
-  ERROR (state, message) {
-    state.error = message;
+  FORM_ERROR (state, message) {
+    state.formError = message;
   },
   FORM_DATA_EMAIL (state, val) {
     state.formData.email = val;
@@ -24,16 +26,18 @@ const mutations = {
 };
 
 const actions = {
-  errorOccur: function ({ commit, state }) {
-    commit('ERROR', "has error");
+
+  submitLogin: ({ commit }, response) => {
+    // submit this!!!
+    Service.authenticate(response);
   },
   updateEmail: ({ commit }, e) => {
     commit('FORM_DATA_EMAIL', e.target.value);
 
-    if(e.target.value.length < 10) {
-      commit('ERROR', "글자 수가 작음");
+    if(e.target.value.length < 1) {
+      commit('FORM_ERROR', {email: "입력을 해야 합니다"});
     } else {
-      commit('ERROR', null);
+      commit('FORM_ERROR', {email: null});
     }
   },
   updatePassword: ({ commit }, e) => {
@@ -43,8 +47,8 @@ const actions = {
 
 // getters are functions
 const getters = {
-  getError   : state => state.error,
-  getFormData: state => state.formData
+  formError: state => state.formError,
+  formData : state => state.formData
 };
 
 // Combine the initial state and the mutations to create a Vuex store.

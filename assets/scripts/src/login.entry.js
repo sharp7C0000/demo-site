@@ -1,17 +1,13 @@
 import Vue       from 'vue/dist/vue.js';
-import Vuex      from 'vuex';
 import VueRouter from 'vue-router';
 import Topbar    from "./common/topbar.vue";
 import App       from "./login/app.vue";
 
-
 import store from "./login/store.js";
-
 
 require("../../sass/app.scss");
 
 Vue.use(VueRouter);
-Vue.use(Vuex);
 
 Vue.component('topbar', Topbar);
 
