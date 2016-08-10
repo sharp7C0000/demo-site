@@ -6,14 +6,23 @@ import Service from './service.js';
 Vue.use(Vuex);
 
 const state = {
+  
+  isSubmited: false,
+  
   formError: {},
-  formData: {
+  formData : {
     email   : null,
     password: null
   }
 };
 
 const mutations = {
+
+  REQUEST (state) {
+    state.formError = {};
+    validate(state);
+  },
+
   FORM_ERROR (state, message) {
     state.formError = message;
   },
@@ -25,20 +34,33 @@ const mutations = {
   }
 };
 
+function validate(state) {
+  for (var key in state.formData) {
+    var item = state.formData[key];
+    if(!item) {
+      state.formError[key] = `${key} cannot be empty`;
+    }
+  }
+}
+
 const actions = {
 
-  submitLogin: ({ commit }, response) => {
-    // submit this!!!
-    Service.authenticate(response);
+  // validateForm: ({ commit }, response) => {
+  //   // validate local
+  //   console.log(response);
+
+  
+  // },
+
+  submitLogin: ({ commit, state }) => {
+    commit('REQUEST');
+    if(Object.keys(state.formError).length == 0) {
+      Service.authenticate(state.formData);
+    }
   },
+
   updateEmail: ({ commit }, e) => {
     commit('FORM_DATA_EMAIL', e.target.value);
-
-    if(e.target.value.length < 1) {
-      commit('FORM_ERROR', {email: "입력을 해야 합니다"});
-    } else {
-      commit('FORM_ERROR', {email: null});
-    }
   },
   updatePassword: ({ commit }, e) => {
     commit('FORM_DATA_PASSWORD', e.target.value);

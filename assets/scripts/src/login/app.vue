@@ -35,21 +35,22 @@
       <div class="card">
         <div class="card-block">
           <h3 class="card-title">LOGIN</h3>
-          <form action="#" v-on:submit.prevent="submit">
+          <form action="/dologin" method="POST" v-on:submit.prevent="submitLogin">
             <fieldset class="form-group" v-bind:class="{'has-danger': formError.email}">
               <label>Email</label>
               <input type="text" class="form-control"  v-bind:class="{'form-control-danger': formError.email}" placeholder="Email" :value="formData.email" @input="updateEmail">
               <div v-if="formError.email" class="form-control-feedback" v-text="formError.email"></div>
             </fieldset>
 
-            <fieldset class="form-group">
+            <fieldset class="form-group" v-bind:class="{'has-danger': formError.password}">
               <label>Password</label>
-              <input type="password" class="form-control" placeholder="Password" :value="formData.password" @input="updatePassword">
+              <input type="password" class="form-control" v-bind:class="{'form-control-danger': formError.password}" placeholder="Password" :value="formData.password" @input="updatePassword">
+              <div v-if="formError.password" class="form-control-feedback" v-text="formError.password"></div>
             </fieldset>
             <!--<div class="alert alert-danger" role="alert" v-if="formError">
               <strong>Oh snap!</strong> {{formError}}
             </div>-->
-            <button type="button" v-on:click="submitLogin(formData)" class="btn btn-primary btn-block">Login</button>
+            <button type="submit" v-on:click="submitLogin" class="btn btn-primary btn-block">Login</button>
           </form>
         </div>
       </div>
