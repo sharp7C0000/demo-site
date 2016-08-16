@@ -7,7 +7,7 @@ Vue.use(Vuex);
 
 const state = {
   
-  isSubmited: false,
+  authStatus: null,
   
   formError: {},
   formData : {

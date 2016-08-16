@@ -64,8 +64,9 @@
 
   export default {
 
-    ready () {
-      console.log("ready!!");
+    mounted   () {
+      console.log("readed2", this);
+
     },
 
     components: {
