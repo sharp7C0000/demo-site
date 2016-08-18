@@ -7,8 +7,9 @@ Vue.use(Vuex);
 
 const state = {
   
-  authStatus: null,
+  loginStatus: null,
   
+  // local error
   formError: {},
   formData : {
     email   : null,
@@ -18,14 +19,27 @@ const state = {
 
 const mutations = {
 
-  REQUEST (state) {
-    state.formError = {};
+  LOGIN_REQUEST (state) {
+    state.formError   = {};
+    state.loginStatus = null;
     validate(state);
   },
 
-  FORM_ERROR (state, message) {
-    state.formError = message;
+  LOGIN_READY (state) {
+    state.loginStatus = 'requesting';
   },
+
+  LOGIN_SUCCESS (state) {
+    state.loginStatus = 'successful';
+  },
+
+  LOGIN_FAIL (state, reason) {
+    state.loginStatus   = 'fail';
+    if(!reason) {
+      state.formError[""] = "Cannot connect the server";
+    }
+  },
+
   FORM_DATA_EMAIL (state, val) {
     state.formData.email = val;
   },
@@ -45,17 +59,20 @@ function validate(state) {
 
 const actions = {
 
-  // validateForm: ({ commit }, response) => {
-  //   // validate local
-  //   console.log(response);
-
-  
-  // },
-
   submitLogin: ({ commit, state }) => {
-    commit('REQUEST');
+
+    if(state.loginStatus == "requesting") {
+      return ;
+    }
+
+    commit('LOGIN_REQUEST');
     if(Object.keys(state.formError).length == 0) {
-      Service.authenticate(state.formData);
+      commit('LOGIN_READY');
+      Service.authenticate(state.formData, (resp) => {
+        commit('LOGIN_SUCCESS');
+      }, (resp) => {
+        commit('LOGIN_FAIL', resp.data);
+      });
     }
   },
 
@@ -69,8 +86,9 @@ const actions = {
 
 // getters are functions
 const getters = {
-  formError: state => state.formError,
-  formData : state => state.formData
+  formError  : state => state.formError,
+  formData   : state => state.formData,
+  loginStatus: state => state.loginStatus
 };
 
 // Combine the initial state and the mutations to create a Vuex store.
