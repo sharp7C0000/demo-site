@@ -61,6 +61,11 @@ module.exports = {
         test: /\.scss$/,
         loaders: ["style", "css", "sass"]
       },
+      // css loader
+      { 
+        test: /\.css$/, 
+        loader: "style-loader!css-loader" 
+      },
       // font loader
       {
         test: /\.(eot|svg|ttf|woff(2)?)(\?v=\d+\.\d+\.\d+)?/,

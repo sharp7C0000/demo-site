@@ -1,0 +1,6 @@
+@import "~bootstrap/scss/_variables";
+@import "~nprogress/nprogress.css";
+
+#nprogress .bar {
+  background-color: $brand-success;
+}

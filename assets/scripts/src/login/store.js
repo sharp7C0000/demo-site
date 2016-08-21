@@ -5,6 +5,12 @@ import Service from './service.js';
 
 Vue.use(Vuex);
 
+const requestStatus = {
+  REQUESTING: "requesting",
+  SUCCESSFUL: "successful",
+  FAILED    : "failed"
+};
+
 const state = {
   
   loginStatus: null,
@@ -26,15 +32,17 @@ const mutations = {
   },
 
   LOGIN_READY (state) {
-    state.loginStatus = 'requesting';
+    state.loginStatus = requestStatus.REQUESTING;
   },
 
   LOGIN_SUCCESS (state) {
-    state.loginStatus = 'successful';
+    state.loginStatus = requestStatus.SUCCESSFUL;
   },
 
   LOGIN_FAIL (state, reason) {
-    state.loginStatus   = 'fail';
+    state.loginStatus = requestStatus.FAILED;
+    
+    // has no reason
     if(!reason) {
       state.formError[""] = "Cannot connect the server";
     }
@@ -61,11 +69,12 @@ const actions = {
 
   submitLogin: ({ commit, state }) => {
 
-    if(state.loginStatus == "requesting") {
+    if(state.loginStatus == requestStatus.REQUESTING) {
       return ;
     }
 
     commit('LOGIN_REQUEST');
+    
     if(Object.keys(state.formError).length == 0) {
       commit('LOGIN_READY');
       Service.authenticate(state.formData, (resp) => {

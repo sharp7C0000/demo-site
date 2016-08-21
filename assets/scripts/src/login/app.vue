@@ -69,9 +69,7 @@
 
   export default {
 
-    mounted   () {
-      console.log("readed2", this);
-
+    mounted () {
     },
 
     components: {
@@ -90,9 +88,6 @@
           'updatePassword'
         ])
       }
-    },
-    
-    //store
-
+    }
   }
 </script>

@@ -1,7 +1,5 @@
-import Vue         from 'vue/dist/vue.js';
-import VueResource from 'vue-resource';
-
-Vue.use(VueResource);
+import Vue  from 'vue/dist/vue.js';
+import Http from "../common/http.js";
 
 export default {
   authenticate(request, cb, ecb) {
