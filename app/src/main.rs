@@ -7,6 +7,7 @@
 #[macro_use] extern crate router;
 #[macro_use] extern crate bson;
 #[macro_use] extern crate mongodb;
+#[macro_use] extern crate params;
 
 mod server;
 mod controllers;

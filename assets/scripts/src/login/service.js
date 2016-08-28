@@ -3,7 +3,7 @@ import Http from "../common/http.js";
 
 export default {
   authenticate(request, cb, ecb) {
-    return Vue.http.post('auth/authenticate', request)
+    return Vue.http.post('login', request)
     .then((response) => cb(response.data))
     .catch((error)   => ecb(error));
   }

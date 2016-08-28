@@ -2,7 +2,9 @@ use iron::prelude::*;
 use iron::status;
 use iron_login::User;
 use router::{Router};
+use params::{Params, Value};
 use handlebars_iron::{Template, HandlebarsEngine, DirectorySource, MemorySource};
+
 
 use server::controller::Controller;
 
@@ -45,29 +47,55 @@ fn register(router: &mut Router) {
     Ok(resp)
   });
 
+  // POST : login
+  router.post("login".to_string(), |req: &mut Request| {
+     println!("{:?}", req.get_ref::<Params>());
+
+    let map = req.get_ref::<Params>().unwrap();
+
+    // check login form
+    match map.find(&["user", "name"]) {
+        Some(&Value::String(ref name)) if name == "Marie" => {
+            println!("tt")
+        },
+        _ => println!("kk"),
+    }
+
+
+    let mut resp = Response::new();
+    resp.set_mut(Template::new("login", ())).set_mut(status::BadRequest);
+    Ok(resp)
+  });
+
   // GET : Admin page
   router.get("do-login".to_string(), |req: &mut Request| {
     let login = MyUser::get_login(req);
+    let mut resp = Response::new();
+    Ok(resp)
+    // Ok(Response::new()
+    //       .set(::iron::status::Ok)
+    //       .set(format!("User set to '{}'", uid))
+    //       .set(login.log_in(MyUser::new(uid))))
     // If a query (`?username`) is passed, set the username to that string
-    if let Some(ref uid) = req.url.query {
-        // If no username is passed, log out
-        if uid == "" {
-          Ok(Response::new()
-          .set(::iron::status::Ok)
-          .set(format!("Logged out"))
-          .set(login.log_out()))
-        } else {
-          Ok(Response::new()
-          .set(::iron::status::Ok)
-          .set(format!("User set to '{}'", uid))
-          .set(login.log_in(MyUser::new(uid))))
-        }
-    } else {
-      let user = login.get_user();
-      Ok(Response::new()
-      .set(::iron::status::Ok)
-      .set(format!("user = {:?}", user)))
-    }
+    // if let Some(ref uid) = req.url.query {
+    //     // If no username is passed, log out
+    //     if uid == "" {
+    //       Ok(Response::new()
+    //       .set(::iron::status::Ok)
+    //       .set(format!("Logged out"))
+    //       .set(login.log_out()))
+    //     } else {
+    //       Ok(Response::new()
+    //       .set(::iron::status::Ok)
+    //       .set(format!("User set to '{}'", uid))
+    //       .set(login.log_in(MyUser::new(uid))))
+    //     }
+    // } else {
+    //   let user = login.get_user();
+    //   Ok(Response::new()
+    //   .set(::iron::status::Ok)
+    //   .set(format!("user = {:?}", user)))
+    // }
   });
 
   // GET : Admin page

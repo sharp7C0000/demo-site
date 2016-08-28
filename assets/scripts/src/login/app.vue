@@ -37,7 +37,7 @@
         <div class="card-block">
           <h3 class="card-title">LOGIN</h3>
           
-          <form action="/dologin" method="POST" v-on:submit.prevent="submitLogin">
+          <form action="#" method="POST" v-on:submit.prevent="submitLogin">
 
             <fieldset class="form-group" v-bind:class="{'has-danger': formError.email}">
               <label>Email</label>
@@ -68,9 +68,6 @@
   import { mapGetters, mapActions } from 'vuex';
 
   export default {
-
-    mounted () {
-    },
 
     components: {
       
