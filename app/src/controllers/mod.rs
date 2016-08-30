@@ -7,10 +7,11 @@ use handlebars_iron::{Template, HandlebarsEngine, DirectorySource, MemorySource}
 
 
 use server::controller::Controller;
+use models::SiteUser;
 
 use std::collections::BTreeMap;
 
-// test
+ // test
 #[derive(Debug)]
 struct MyUser(String);
 impl MyUser {
@@ -49,22 +50,23 @@ fn register(router: &mut Router) {
 
   // POST : login
   router.post("login".to_string(), |req: &mut Request| {
-     println!("{:?}", req.get_ref::<Params>());
 
     let map = req.get_ref::<Params>().unwrap();
 
     // check login form
-    match map.find(&["user", "name"]) {
-        Some(&Value::String(ref name)) if name == "Marie" => {
-            println!("tt")
-        },
-        _ => println!("kk"),
+    match (map.find(&["email"]), map.find(&["password"])) {
+      (Some(&Value::String(ref name)), Some(&Value::String(ref password))) => {
+          // database logic
+          let mut resp = Response::new();
+          resp.set_mut(status::Ok);
+          Ok(resp)
+      },
+      _ => {
+        let mut resp = Response::new();
+        resp.set_mut(status::BadRequest);
+        Ok(resp)
+      }
     }
-
-
-    let mut resp = Response::new();
-    resp.set_mut(Template::new("login", ())).set_mut(status::BadRequest);
-    Ok(resp)
   });
 
   // GET : Admin page

@@ -11,6 +11,7 @@
 
 mod server;
 mod controllers;
+mod models;
 
 use bson::Bson;
 
